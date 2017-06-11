@@ -319,3 +319,18 @@ def donate(rpc, reddit, msg, tx_queue, failover_time):
     else:
         bot_logger.logger.info('user %s not registered (command : donate) ' % msg.author.name)
         msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+
+def enablemultisig_1of2(rpc, reddit, msg, tx_queue, failover_time):
+    if user_function.user_exist(msg.author.name):
+        split_message = msg.body.lower().strip().split()
+        enablemultisig_index = split_message.index('+enablemultisig')
+        if split_message[enablemultisig_index + 1] == '1of2':
+            userpubkey = split_message[enablemultisig_index + 2]
+            address = user_function.get_user_address(msg.author.name)
+            botpubkey = rpc.validateaddress(address)
+            try:
+                multisig = rpc.createmultisig(1, [str(botpubkey['pubkey']), str(split_message[enablemultisig_index + 2])])
+            except:
+                bot_logger.logger.info('user %s entered invalid pubkey (command : enablemultisig_1of2) ' % msg.author.name)
+            rpc.importaddress(multisig["address"], "redditmulti-%s" % msg.author.name, False)
+            print(multisig)			
