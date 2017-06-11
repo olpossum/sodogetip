@@ -71,21 +71,25 @@ class SoDogeTip():
                             utils.mark_msg_read(self.reddit, msg)
 
                         elif split_message.count('+withdraw') and msg_subject == '+withdraw':
-                            utils.mark_msg_read(self.reddit, msg)
                             bot_command.withdraw_user(self.rpc_main, msg, failover_time)
+                            utils.mark_msg_read(self.reddit, msg)
 
                         elif split_message.count('+/u/' + config.bot_name):
-                            utils.mark_msg_read(self.reddit, msg)
                             bot_command.tip_user(self.rpc_main, self.reddit, msg, tx_queue, failover_time)
+                            utils.mark_msg_read(self.reddit, msg)
 
                         elif split_message.count('+donate'):
-                            utils.mark_msg_read(self.reddit, msg)
                             bot_command.donate(self.rpc_main, self.reddit, msg, tx_queue, failover_time)
+                            utils.mark_msg_read(self.reddit, msg)
+
+                        elif split_message.count('+enablemultisig') and split_message[1] == '1of2':
+                            bot_command.enablemultisig_1of2(self.rpc_main, self.reddit, msg, tx_queue, failover_time)
+                            utils.mark_msg_read(self.reddit, msg)
 
                         else:
-                            utils.mark_msg_read(self.reddit, msg)
                             # msg.reply('Currently not supported')
                             bot_logger.logger.info('Currently not supported')
+                            utils.mark_msg_read(self.reddit, msg)
 
                 # to not explode rate limit :)
                 bot_logger.logger.info('Make an pause !')
