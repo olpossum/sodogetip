@@ -36,9 +36,19 @@ def add_user(user, address):
         json.dump(data, f)
 
 
+def mutisig_enabled(username, type_multisig):
+    db = TinyDB(DATA_PATH + bot_config['multisig_user'])
+    table = db.table(username)
+    User = Query()
+    return table.search(User.type == type_multisig)
+
 def get_user_address(user):
-    user_list = get_users()
-    return user_list[user]
+    multi = mutisig_enabled(user, "1of2")
+    if multi[0]['enabled']:
+        return multi[0]['address']
+    else:
+        user_list = get_users()
+        return user_list[user]
 
 
 def user_exist(user):
