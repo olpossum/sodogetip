@@ -256,7 +256,7 @@ def history_user(msg):
                 str_finish = "Successful"
 
             history_table += "%s|%s|%s|%s|%s|%s|\n" % (
-                datetime.datetime.strptime(tip['time'], '%Y-%m-%dT%H:%M:%S.%f'), tip['sender'], tip['receiver'],
+                datetime.datetime.strptime(tip['time'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%Y-%m-%d %H:%M:%S'), tip['sender'], tip['receiver'],
                 str(tip['amount']), tip['action'], str_finish)
 
         msg.reply(Template(lang.message_history + history_table + lang.message_footer).render(username=msg.author.name))
