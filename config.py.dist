@@ -17,6 +17,7 @@ backup_wallet_path = "/path/of/wallet/backup/"
 
 bot_config = {
     'user_file': 'user_files.json',
+    'multisig_user': 'multisig_user.json',
     'unregistered_tip_user': 'unregistered_tip_user.json',
     'user_history_path': 'user_history/',
     'logs_path': 'logs/',
