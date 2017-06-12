@@ -120,10 +120,7 @@ def withdraw_user(rpc, msg, failover_time):
                     username=msg.author.name, user_balance=str(user_balance), amount=str(amount)) + lang.message_footer)
             else:
                 receiver_address = split_message[4]
-                if time.time() > int(failover_time.value) + 86400:
-                    send = crypto.send_to(rpc, sender_address, receiver_address, amount)
-                else:
-                    send = crypto.send_to_failover(rpc, sender_address, receiver_address, amount)
+                send = crypto.send_to(rpc, sender_address, receiver_address, amount, failover_time.value)
 
                 if send:
                     history.add_to_history(msg.author.name, sender_address, receiver_address, amount,

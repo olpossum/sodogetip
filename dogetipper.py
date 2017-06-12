@@ -37,7 +37,7 @@ class SoDogeTip():
             bot_logger.logger.debug('main failover_time : %s' % str(failover_time.value))
 
             try:
-                
+
                 for msg in self.reddit.inbox.unread(limit=None):
 
                     if (type(msg) is not Message) and (type(msg) is not Comment):
@@ -99,7 +99,7 @@ class SoDogeTip():
                 bot_logger.logger.error('Main Bot loop crashed...')
                 time.sleep(10)
 
-    def process_pending_tip(self,tx_queue, failover_time):
+    def process_pending_tip(self, tx_queue, failover_time):
         while True:
             bot_logger.logger.info('Make clean of unregistered tips')
             bot_command.replay_remove_pending_tip(self.rpc_main, self.reddit, tx_queue, failover_time)
@@ -125,7 +125,7 @@ class SoDogeTip():
                             break
 
                     bot_logger.logger.info('Consolidate %s account !' % account)
-                    crypto.send_to(self.rpc_antispam, address, address, sum(unspent_amounts), True)
+                    crypto.send_to(self.rpc_antispam, address, address, sum(unspent_amounts), 0, True)
 
             # wait a bit before re-scan account
             time.sleep(240)
