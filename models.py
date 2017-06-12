@@ -82,3 +82,13 @@ class User(object):
 
         if user_function.user_exist(self.username):
             self.address = user_function.get_user_address(self.username)
+
+class VanityGenRequest(object):
+    """Class to represent an user"""
+
+    def __init__(self, user,vanity):
+        self.username = user
+        self.pattern = None
+        self.difficulty = None
+        self.address = None
+        self.privkey = None
