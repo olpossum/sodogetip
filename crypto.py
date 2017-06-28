@@ -6,6 +6,7 @@ import traceback
 from bitcoinrpc.authproxy import AuthServiceProxy
 
 import bot_logger
+import models
 import user_function
 from config import bot_config, rpc_config
 
@@ -15,10 +16,11 @@ def init_passphrase():
     global wallet_passphrase
     wallet_passphrase = getpass.getpass("wallet passphrase : ")
 
+
 def check_passphrase():
     rpc = AuthServiceProxy("http://%s:%s@%s:%s" % (
-            rpc_config['doge_rpc_username'], rpc_config['doge_rpc_password'], rpc_config['doge_rpc_host'],
-            rpc_config['doge_rpc_port']), timeout=120)
+        rpc_config['doge_rpc_username'], rpc_config['doge_rpc_password'], rpc_config['doge_rpc_host'],
+        rpc_config['doge_rpc_port']), timeout=120)
 
     logging.disable(logging.DEBUG)
     rpc.walletpassphrase(wallet_passphrase, int(bot_config['timeout']))
@@ -26,15 +28,15 @@ def check_passphrase():
 
     # check
     wallet_info = rpc.getwalletinfo()
-    if wallet_info['unlocked_until'] < time.time() :
+    if wallet_info['unlocked_until'] < time.time():
         exit()
 
     rpc.walletlock()
 
 
-
 def balance_user(rpc, msg, failover_time):
-    if user_function.user_exist(msg.author.name):
+    user = models.User(msg.author.name)
+    if user.is_registered():
         if time.time() > int(failover_time.value) + 86400:
             # not in safe mode
             balance = get_user_confirmed_balance(rpc, msg.author.name)
@@ -102,7 +104,7 @@ def get_user_confirmed_balance(rpc, user):
 def get_user_unconfirmed_balance(rpc, user):
     unspent_amounts = []
 
-    address = user_function.get_user_address(user)
+    address = user.address
     list_unspent = rpc.listunspent(0, 0, [address])
 
     # in case of no unconfirmed transactions
@@ -113,9 +115,6 @@ def get_user_unconfirmed_balance(rpc, user):
         unspent_amounts.append(list_unspent[i]['amount'])
 
     bot_logger.logger.debug("unconfirmed_amounts %s" % (str(sum(unspent_amounts))))
-
-    unconfirmed_balance = rpc.getbalance("reddit-%s" % user)
-    bot_logger.logger.debug("unconfirmed_balance %s" % (str(int(unconfirmed_balance))))
 
     return int(sum(unspent_amounts))
 

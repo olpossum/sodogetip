@@ -55,20 +55,13 @@ def get_coin_value(balance):
 
 
 def check_amount_valid(amount):
-    if amount >= 1:
-        try:
-            print('such amount : '+str(amount))
+    try:
+        if (float(amount)) >= 1:
+            # print('such amount : '+str(amount))
             return True
-        except UnicodeEncodeError:
+        else:
             return False
-    else:
-        return False
-
-
-def is_whole(x):
-    if x % 1 == 0:
-        return True
-    else:
+    except (UnicodeEncodeError, ValueError):
         return False
 
 

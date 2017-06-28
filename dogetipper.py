@@ -1,7 +1,5 @@
-import os
 import time
 import traceback
-from threading import Thread
 
 import praw
 import requests
@@ -16,7 +14,7 @@ import crypto
 import lang
 import user_function
 import utils
-from config import rpc_config, bot_config, DATA_PATH
+from config import rpc_config, bot_config
 
 
 class SoDogeTip():
@@ -52,19 +50,15 @@ class SoDogeTip():
                         split_message = msg_body.lower().split()
 
                         if (msg_body == '+register' and msg_subject == '+register') or split_message.count('+register'):
-                            bot_command.register_user(self.rpc_main, msg)
+                            bot_command.register_user(self.rpc_main, msg, self.reddit)
                             utils.mark_msg_read(self.reddit, msg)
 
-                        elif msg_body == '+info' and msg_subject == '+info':
+                        elif (msg_body == '+info' and msg_subject == '+info') or (msg_body == '+balance' and msg_subject == '+balance'):
                             bot_command.info_user(self.rpc_main, msg)
                             utils.mark_msg_read(self.reddit, msg)
 
                         elif msg_body == '+help' and msg_subject == '+help':
                             bot_command.help_user(self.rpc_main, msg)
-                            utils.mark_msg_read(self.reddit, msg)
-
-                        elif msg_body == '+balance' and msg_subject == '+balance':
-                            bot_command.balance_user(self.rpc_main, msg)
                             utils.mark_msg_read(self.reddit, msg)
 
                         elif msg_body == '+history' and msg_subject == '+history':
