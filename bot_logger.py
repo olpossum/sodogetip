@@ -15,9 +15,9 @@ logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('prawcore').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
-formatter_file = logging.Formatter('%(asctime)s :: (%(threadName)-11s) :: (%(levelname)-10s) :: %(name)s :: %(pathname)s:%(lineno)s :: %(message)s')
+formatter_file = logging.Formatter(
+    '%(asctime)s :: (%(threadName)-11s) :: (%(levelname)-10s) :: %(name)s :: %(pathname)s:%(lineno)s :: %(message)s')
 formatter_output = logging.Formatter('%(asctime)s - (%(threadName)-11s) - (%(levelname)-10s) - %(message)s')
-
 
 file_handler = RotatingFileHandler(
     DATA_PATH + bot_config['logs_path'] + 'activity_' + date.today().strftime('%Y%m%d') + '.log', 'a', 1000000, 1)

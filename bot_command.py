@@ -257,7 +257,7 @@ def tip_user(rpc, reddit, msg, tx_queue, failover_time):
         # update tip status
         history.update_tip(tip.sender.username, tip)
         history.update_tip(tip.receiver.username, tip)
-        
+
 
 def history_user(msg):
     user = models.User(msg.author.name)

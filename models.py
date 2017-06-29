@@ -146,7 +146,6 @@ class User(object):
         if user_function.user_exist(self.username):
             self.address = user_function.get_user_address(self.username)
 
-
     def is_registered(self):
         # if user have address it's registered
         if self.address is not None:
@@ -157,11 +156,11 @@ class User(object):
     def get_balance_unregistered_tip(self):
         return user_function.get_balance_unregistered_tip(self.username)
 
-      
+
 class VanityGenRequest(object):
     """Class to represent an user"""
 
-    def __init__(self, user,vanity):
+    def __init__(self, user, vanity):
         self.username = user
         self.pattern = None
         self.difficulty = None
