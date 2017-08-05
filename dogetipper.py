@@ -9,7 +9,7 @@ import bot_command
 import bot_logger
 import config
 import crypto
-import lang
+import lang_ltc
 import reddit_gold
 import user_function
 import utils
@@ -17,7 +17,11 @@ import utils
 
 class SoDogeTip():
     def __init__(self):
-        self.reddit = praw.Reddit(config.bot_name)
+        #self.reddit = praw.Reddit(config.bot_name)
+        self.reddit = praw.Reddit(user_agent='Litecoin Tipbot (by /u/fireituppity; spun off from sodogetip)',
+                         client_id='QtD4Lw7CYrAdDg', client_secret='NWhpw9bxla3XaXabqP11AH2jwSU',
+                         username='fireituppity', password='8vPh3D!5Uooh')
+
 
     def main(self, tx_queue, failover_time):
         bot_logger.logger.info('Main Bot loop !')
@@ -102,7 +106,7 @@ class SoDogeTip():
             for account, address in list_account.items():
                 # don't flood rpc daemon
                 time.sleep(1)
-                list_tx = rpc_antispam.listunspent(1, 99999999999, [address])
+                list_tx = rpc_antispam.listunspent(1, 999999, [address])
 
                 if len(list_tx) > int(config.spam_limit):
                     unspent_amounts = []

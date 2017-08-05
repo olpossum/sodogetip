@@ -33,15 +33,22 @@ class Tip(object):
             rpc = crypto.get_rpc()
 
         p = re.compile(
-            '(\+\/u\/' + config.bot_name + ')\s?(@?[0-9a-zA-Z-_\/\+]+)?\s+(\d+|[0-9a-zA-Z,.]+)\s(doge)\s?(verify)?',
+            '(\+\/u\/' + config.bot_name + ')\s?(@?[0-9a-zA-Z-_\/\+]+)?\s+(\d+|[0-9a-zA-Z,.]+)\s(ltc)\s?(verify)?',
             re.IGNORECASE)
         m = p.search(message_to_parse.strip())
-        # Group 1 is +/u/sodogetiptest
+        print(m.group(1))
+        print(m.group(2))
+        print("Amount group below:")
+        print(m.group(3))
+        # Group 1 is +/u/soltctiptest
         # Group 2 is either blank(tip to the commentor), an address, or a user
         self.receiver = m.group(2)
         # Group 3 is the tip amount in integers(ex.  100) or a word(ex.roll)
         self.amount = m.group(3).replace(',', '.')
-        # Group 4 is doge
+        print("Self.amount below:")
+        print(m.group(3).replace(',', '.'))
+        print(self.amount)
+        # Group 4 is ltc
         self.currency = m.group(4)
         # Group 5 is either blank(no verify message) or verify(verify message)
         self.verify = True if (m.group(5) == "verify") else False
@@ -68,8 +75,8 @@ class Tip(object):
             self.amount = random.randint(1, int(self.amount[6:]))
 
         # here amount is numeric, make magic to support not whole tips
-        if utils.check_amount_valid(self.amount):
-            self.amount = round(float(self.amount) - 0.5)
+        #if utils.check_amount_valid(self.amount):
+        #   self.amount = round(float(self.amount) - 0.5)
 
         # if amount is all, get balance
         if self.amount == 'all':
@@ -79,7 +86,7 @@ class Tip(object):
         bot_logger.logger.debug("isinstance self.amount = %s" % str(isinstance(self.amount, str)))
         bot_logger.logger.debug("type self.amount = %s" % str(type(self.amount)))
 
-        if type(self.amount) is unicode or type(self.amount) is str:
+        if type(self.amount) is str:
             bot_logger.logger.debug("self.amount is str")
             if self.amount == "roll":
                 self.amount = random.randint(1, 6)
@@ -92,7 +99,7 @@ class Tip(object):
 
         bot_logger.logger.debug("self.amount = %s" % str(self.amount))
 
-        # if tip is over 1000 doge set verify
+        # if tip is over 1000 ltc set verify
         if float(self.amount) >= float(1000):
             self.verify = True
 

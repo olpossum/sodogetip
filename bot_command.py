@@ -8,7 +8,7 @@ import bot_logger
 import config
 import crypto
 import history
-import lang
+import lang_ltc
 import models
 import user_function
 import utils
@@ -19,7 +19,7 @@ def register_user(msg, reddit):
     if not user.is_registered():
         user.get_new_address()
         if user.address:
-            content_reply = Template(lang.message_register_success + lang.message_footer).render(
+            content_reply = Template(lang_ltc.message_register_success + lang_ltc.message_footer).render(
                 username=user.username,
                 address=user.address)
             tittle_reply = 'you are registered'
@@ -41,7 +41,7 @@ def register_user(msg, reddit):
         pending_value_usd = utils.get_coin_value(pending_balance)
         spendable_value_usd = utils.get_coin_value(spendable_balance)
         content_reply = Template(
-            lang.message_already_registered + lang.message_account_details + lang.message_footer).render(
+            lang_ltc.message_already_registered + lang_ltc.message_account_details + lang_ltc.message_footer).render(
             username=msg.author.name,
             address=user.address,
             pending_balance=str(pending_balance),
@@ -78,7 +78,7 @@ def info_user(msg):
         spendable_value_usd = utils.get_coin_value(spendable_balance)
         pending_tips_value_usd = utils.get_coin_value(pending_tips)
 
-        msg.reply(Template(lang.message_account_details + lang.message_footer).render(
+        msg.reply(Template(lang_ltc.message_account_details + lang_ltc.message_footer).render(
             username=msg.author.name,
             spendable_balance=str(spendable_balance),
             spendable_value_usd=str(spendable_value_usd),
@@ -91,17 +91,17 @@ def info_user(msg):
         history.add_to_history(msg.author.name, "", "", spendable_balance, "info")
     else:
         bot_logger.logger.info('user %s not registered (command : info) ' % msg.author.name)
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=msg.author.name))
 
 
 def help_user(msg):
     user = models.User(msg.author.name)
     if user.is_registered():
-        msg.reply(Template(lang.message_help + lang.message_footer).render(
+        msg.reply(Template(lang_ltc.message_help + lang_ltc.message_footer).render(
             username=msg.author.name, address=user.address))
     else:
         bot_logger.logger.info('user %s not registered (command : help) ' % msg.author.name)
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=msg.author.name))
 
 
 def withdraw_user(msg, failover_time):
@@ -120,8 +120,8 @@ def withdraw_user(msg, failover_time):
             if amount >= float(user_balance) + float(user_spendable_balance):
                 bot_logger.logger.info('user %s not have enough to withdraw this amount (%s), balance = %s' % (
                 user.username, amount, user_balance))
-                msg.reply(Template(lang.message_balance_low_withdraw).render(
-                    username=user.username, user_balance=str(user_balance), amount=str(amount)) + lang.message_footer)
+                msg.reply(Template(lang_ltc.message_balance_low_withdraw).render(
+                    username=user.username, user_balance=str(user_balance), amount=str(amount)) + lang_ltc.message_footer)
             else:
                 receiver_address = split_message[4]
                 tip_id = random.randint(0, 99999999)
@@ -134,17 +134,17 @@ def withdraw_user(msg, failover_time):
                     history.update_withdraw(user.username, True, send, tip_id)
 
                     value_usd = utils.get_coin_value(amount)
-                    msg.reply(Template(lang.message_withdraw + lang.message_footer).render(
+                    msg.reply(Template(lang_ltc.message_withdraw + lang_ltc.message_footer).render(
                         username=user.username, receiver_address=receiver_address, amount=str(amount),
                         value_usd=str(value_usd)))
 
         elif split_message[4] == user.address:
-            msg.reply(lang.message_withdraw_to_self + lang.message_footer)
+            msg.reply(lang_ltc.message_withdraw_to_self + lang_ltc.message_footer)
         else:
-            bot_logger.logger.info(lang.message_invalid_amount)
-            msg.reply(lang.message_invalid_amount + lang.message_footer)
+            bot_logger.logger.info(lang_ltc.message_invalid_amount)
+            msg.reply(lang_ltc.message_invalid_amount + lang_ltc.message_footer)
     else:
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=msg.author.name))
 
 
 def tip_user(reddit, msg, tx_queue, failover_time):
@@ -160,7 +160,7 @@ def tip_user(reddit, msg, tx_queue, failover_time):
     # check user who use command is registered
     if tip.sender.is_registered() is not True:
         bot_logger.logger.info('user %s not registered (sender) ' % msg.author.name)
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=msg.author.name))
         return False
 
     # parse message
@@ -172,13 +172,13 @@ def tip_user(reddit, msg, tx_queue, failover_time):
     # check amount of tip
     if not utils.check_amount_valid(tip.amount):
         # invalid amount
-        bot_logger.logger.info(lang.message_invalid_amount)
-        reddit.redditor(msg.author.name).message('invalid amount', lang.message_invalid_amount)
+        bot_logger.logger.info(lang_ltc.message_invalid_amount)
+        reddit.redditor(msg.author.name).message('invalid amount', lang_ltc.message_invalid_amount)
         return False
 
     if tip.currency is None:
-        bot_logger.logger.info(lang.message_invalid_currency)
-        reddit.redditor(msg.author.name).message('invalid currency', lang.message_invalid_currency)
+        bot_logger.logger.info(lang_ltc.message_invalid_currency)
+        reddit.redditor(msg.author.name).message('invalid currency', lang_ltc.message_invalid_currency)
         return False
 
     # update receiver
@@ -187,7 +187,7 @@ def tip_user(reddit, msg, tx_queue, failover_time):
     # check user not tip self
     if tip.sender.username == tip.receiver.username:
         reddit.redditor(tip.sender.username).message('cannot tip self',
-                                                     Template(lang.message_recipient_self).render(
+                                                     Template(lang_ltc.message_recipient_self).render(
                                                          username=tip.sender.username))
         return False
 
@@ -201,13 +201,13 @@ def tip_user(reddit, msg, tx_queue, failover_time):
         # not enough for tip
         if tip.amount < float(user_pending_balance):
             reddit.redditor(tip.sender.username).message('pending tip',
-                                                         Template(lang.message_balance_pending_tip).render(
+                                                         Template(lang_ltc.message_balance_pending_tip).render(
                                                              username=tip.sender.username))
         else:
             bot_logger.logger.info('user %s not have enough to tip this amount (%s), balance = %s' % (
                 tip.sender.username, str(tip.amount), str(user_spendable_balance)))
             reddit.redditor(tip.sender.username).message('low balance',
-                                                         Template(lang.message_balance_low_tip).render(
+                                                         Template(lang_ltc.message_balance_low_tip).render(
                                                              username=tip.sender.username))
 
     else:
@@ -228,7 +228,7 @@ def tip_user(reddit, msg, tx_queue, failover_time):
 
                 # if user have 'verify' in this command he will have confirmation
                 if tip.verify:
-                    msg.reply(Template(lang.message_tip).render(
+                    msg.reply(Template(lang_ltc.message_tip).render(
                         sender=msg.author.name, receiver=tip.receiver.username,
                         amount=str(int(tip.amount)),
                         value_usd=str(tip.get_value_usd()), txid=tip.tx_id
@@ -242,14 +242,14 @@ def tip_user(reddit, msg, tx_queue, failover_time):
 
             # send message to sender of tip
             reddit.redditor(tip.sender.username).message('tipped user not registered',
-                                                         Template(lang.message_recipient_register).render(
+                                                         Template(lang_ltc.message_recipient_register).render(
                                                              username=tip.receiver.username))
             # send message to receiver
             reddit.redditor(tip.receiver.username).message(
                 Template(
-                    lang.message_recipient_need_register_title).render(amount=str(tip.amount)),
+                    lang_ltc.message_recipient_need_register_title).render(amount=str(tip.amount)),
                 Template(
-                    lang.message_recipient_need_register_message).render(
+                    lang_ltc.message_recipient_need_register_message).render(
                     username=tip.receiver.username, sender=msg.author.name, amount=str(tip.amount),
                     value_usd=str(tip.get_value_usd())))
 
@@ -268,10 +268,10 @@ def history_user(msg):
 
         history_table = history.build_message(data)
 
-        msg.reply(Template(lang.message_history + history_table + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_history + history_table + lang_ltc.message_footer).render(username=msg.author.name))
     else:
         bot_logger.logger.info('user %s not registered (command : history) ' % msg.author.name)
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=msg.author.name))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=msg.author.name))
 
 
 # Resend tips to previously unregistered users that are now registered
@@ -302,7 +302,7 @@ def replay_remove_pending_tip(reddit, tx_queue, failover_time):
                         if tip.message_fullname is not None:
                             msg_id = re.sub(r't\d+_(?P<id>\w+)', r'\g<id>', tip.message_fullname)
                             msg = Comment(reddit, msg_id)
-                            msg.reply(Template(lang.message_tip).render(
+                            msg.reply(Template(lang_ltc.message_tip).render(
                                 sender=tip.sender.username, receiver=tip.receiver.username, amount=str(tip.amount),
                                 value_usd=str(tip.get_value_usd()), txid=tip.tx_id))
 
@@ -340,9 +340,9 @@ def donate(reddit, msg, tx_queue, failover_time):
 
             history.add_to_history(msg.author.name, msg.author.name, config.bot_name, amount, "donate")
         else:
-            bot_logger.logger.info(lang.message_invalid_amount)
-            reddit.redditor(user.username).message('invalid amount', lang.message_invalid_amount)
+            bot_logger.logger.info(lang_ltc.message_invalid_amount)
+            reddit.redditor(user.username).message('invalid amount', lang_ltc.message_invalid_amount)
     else:
         bot_logger.logger.info('user %s not registered (command : donate) ' % user.username)
-        msg.reply(Template(lang.message_need_register + lang.message_footer).render(username=user.username))
+        msg.reply(Template(lang_ltc.message_need_register + lang_ltc.message_footer).render(username=user.username))
 
