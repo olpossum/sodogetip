@@ -1,4 +1,3 @@
-
 ## sample of config file
 
 rpc_config = {
@@ -8,21 +7,42 @@ rpc_config = {
     "doge_rpc_password": "dogecoinpassword"
 }
 
+rpc_config_ltc = {
+    "ltc_rpc_port": "19335",
+    "ltc_rpc_host": "127.0.0.1",
+    "ltc_rpc_username": "litecoinrpc",
+    "ltc_rpc_password": "litecoinpassword",
+    "timeout": 30
+}
+
 # with ending /
 
 DATA_PATH = '/data/'
+DATA_PATH_LTC = 'C:\\Path\\To\\Data\\'
 
 bot_name = "sodogetiptest"
+bot_name_ltc = "solitetiptest"
+
 backup_wallet_path = "/path/of/wallet/backup/"
+backup_wallet_path = "C:\\Path\\To\\Wallet_Backup\\"
 
 user_file = DATA_PATH + 'user_files.json'
-unregistered_tip_user = DATA_PATH + 'unregistered_tip_user.json',
+unregistered_tip_user = DATA_PATH + 'unregistered_tip_user.json'
+
+user_file_ltc = DATA_PATH_LTC + 'user_files.json'
+unregistered_tip_user_ltc = DATA_PATH_LTC + 'unregistered_tip_user.json'
 
 logs_path = DATA_PATH + 'logs/'
 history_path = DATA_PATH + 'history/'
 
+logs_path_ltc = DATA_PATH_LTC + 'logs/'
+history_path_ltc = DATA_PATH_LTC + 'history/'
+
 spam_limit = 1000
 rate_fee = 1
+
+spam_limit_ltc = 10
+rate_fee_ltc = 0.001
 
 url_get_value = {
     "coincap": 'http://www.coincap.io/page/DOGE',
@@ -31,6 +51,16 @@ url_get_value = {
     "blockcypher": 'https://api.blockcypher.com/v1/doge/main/txs/'
 }
 
+url_get_value_ltc = {
+    "coincap": 'http://www.coincap.io/page/LTC',
+    "cryptocompare": 'https://www.cryptocompare.com/api/data/price?fsym=LTC&tsyms=USD',
+    "cryptonator": 'https://api.cryptonator.com/api/full/ltc-usd',
+    "blockcypher": 'https://api.blockcypher.com/v1/ltc/main/txs/'
+}
 tip_keyword = {
     "dogecar" : 98
+}
+
+tip_keyword_ltc = {
+    "litecar" : 9.8
 }
