@@ -47,7 +47,7 @@ def get_coin_value(balance, format=2):
                 jc_currency = c_currency.json()
                 bot_logger.logger.info('value is $%s' % str(jc_currency['Data'][0]['Price']))
                 usd_currency = float(str("{0:." + str(format) + "f}").format(
-                    float(balance) * float(jc_currency['Data'][0]['Price'])))
+                    int(balance) * float(jc_currency['Data'][0]['Price'])))
                 return usd_currency
             except:
                 traceback.print_exc()

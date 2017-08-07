@@ -11,6 +11,7 @@ import config
 import models
 import user_function
 
+
 def get_rpc():
     return AuthServiceProxy("http://%s:%s@%s:%s" % (
         config.rpc_config['doge_rpc_username'], config.rpc_config['doge_rpc_password'],
@@ -89,7 +90,7 @@ def get_user_spendable_balance(user, rpc=None):
 
     bot_logger.logger.debug("pending_tips %s" % (str(pending_tips)))
 
-    return float(round((sum(unspent_amounts) - pending_tips),8))
+    return int(sum(unspent_amounts) - int(pending_tips))
 
 
 def get_user_confirmed_balance(address):
@@ -109,7 +110,7 @@ def get_user_confirmed_balance(address):
 
     bot_logger.logger.debug("unspent_amounts %s" % (str(sum(unspent_amounts))))
 
-    return float(round((sum(unspent_amounts)),8))
+    return int(sum(unspent_amounts))
 
 
 def get_user_unconfirmed_balance(address):
@@ -127,7 +128,7 @@ def get_user_unconfirmed_balance(address):
 
     bot_logger.logger.debug("unconfirmed_amounts %s" % (str(sum(unspent_amounts))))
 
-    return float(round((sum(unspent_amounts)),8))
+    return int(sum(unspent_amounts))
 
 
 def tip_user(sender_address, receiver_address, amount_tip, tx_queue, failover_time):
@@ -153,11 +154,11 @@ def send_to(rpc, sender_address, receiver_address, amount, take_fee_on_amount=Fa
 
     bot_logger.logger.info("send %s to %s from %s" % (amount, sender_address, receiver_address))
 
-    list_unspent = rpc.listunspent(1, 999999, [sender_address])
+    list_unspent = rpc.listunspent(1, 99999999999, [sender_address])
 
     unspent_amounts = []
     raw_inputs = []
-    fee = 0.001
+    fee = 1
 
     for i in range(0, len(list_unspent), 1):
         unspent_amounts.append(list_unspent[i]['amount'])
@@ -193,25 +194,20 @@ def send_to(rpc, sender_address, receiver_address, amount, take_fee_on_amount=Fa
     bot_logger.logger.debug("raw input : %s" % raw_inputs)
 
     if take_fee_on_amount:
-        return_amount = float(round((sum(unspent_amounts)) - (float(amount) + float(fee)),8))
+        return_amount = int(sum(unspent_amounts)) - int(int(amount) - int(fee))
     else:
-        print("unspent : " + str(sum(unspent_amounts)))
-        print("amount : " + str(amount))
-        print("fee : " + str(fee))
-        #return_amount = Decimal(sum(unspent_amounts)) - (Decimal(amount) + Decimal(fee))
-        return_amount = round(float(sum(unspent_amounts)) - (float(amount) + float(fee)),8)
-        print("return amount : " + str(return_amount))
+        return_amount = int(sum(unspent_amounts)) - int(amount) - int(fee)
 
     bot_logger.logger.debug("return amount : %s" % str(return_amount))
 
-    if float(return_amount) < (0.00100000):
-        raw_addresses = {receiver_address: float(round((amount),8))}
+    if int(return_amount) < 1:
+        raw_addresses = {receiver_address: int(amount)}
     else:
         # when consolidate tx
         if receiver_address == sender_address:
-            raw_addresses = {receiver_address: float(round((float(amount) + float(fee)),8))}
+            raw_addresses = {receiver_address: int(int(amount) - int(fee))}
         else:
-            raw_addresses = {receiver_address: round(float(amount),8), sender_address: float(round(return_amount,8))}
+            raw_addresses = {receiver_address: int(amount), sender_address: int(return_amount)}
 
     bot_logger.logger.debug("raw addresses : %s" % raw_addresses)
 
@@ -246,7 +242,7 @@ def send_to_failover(rpc, sender_address, receiver_address, amount, take_fee_on_
 
     unspent_amounts = []
     raw_inputs = []
-    fee = 0.001
+    fee = 1
 
     for i in range(0, len(list_unspent), 1):
         unspent_amounts.append(list_unspent[i]['amount'])
@@ -266,21 +262,20 @@ def send_to_failover(rpc, sender_address, receiver_address, amount, take_fee_on_
     bot_logger.logger.debug("raw input : %s" % raw_inputs)
 
     if take_fee_on_amount:
-        return_amount = float(round(sum(unspent_amounts) - (float(amount) + float(fee)),8))
+        return_amount = int(sum(unspent_amounts)) - int(int(amount) - int(fee))
     else:
-        #return_amount = Decimal(sum(unspent_amounts)) - Decimal(Decimal(amount) - Decimal(fee))
-        return_amount = float(round(sum(unspent_amounts) - (float(amount) + float(fee)),8))
+        return_amount = int(sum(unspent_amounts)) - int(amount) - int(fee)
 
     bot_logger.logger.debug("return amount : %s" % str(return_amount))
 
-    if float(return_amount) < (0.00100000):
-        raw_addresses = {receiver_address: float(round(amount),8)}
+    if int(return_amount) < 1:
+        raw_addresses = {receiver_address: int(amount)}
     else:
         # when consolidate tx
         if receiver_address == sender_address:
-            raw_addresses = {receiver_address: float(round(float(amount) + float(fee))) }
+            raw_addresses = {receiver_address: int(int(amount) - int(fee))}
         else:
-            raw_addresses = {receiver_address: float(round(amount,8)), sender_address: float(round(return_amount,8))}
+            raw_addresses = {receiver_address: int(amount), sender_address: int(return_amount)}
 
     bot_logger.logger.debug("raw addresses : %s" % raw_addresses)
 
@@ -309,8 +304,8 @@ def calculate_fee(nb_input, nb_out):
     size = calculate_size(nb_input, nb_out)
     # bot_logger.logger.debug("size of tx : %s" % size)
 
-    fee_rate = float(round(config.rate_fee,8))
-    fee = 0.001
+    fee_rate = float(config.rate_fee)
+    fee = 1
     if size > 1000:
         fee = (size / 1000) * fee_rate
 
