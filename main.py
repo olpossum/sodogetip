@@ -1,7 +1,7 @@
 import os
 import time
 import traceback
-import queue
+from Queue import Queue
 from multiprocessing import Value
 from threading import Thread
 
@@ -33,7 +33,7 @@ if __name__ == "__main__":
             utils.create_unregistered_tip_storage()
 
             # start bot
-            tx_queue = queue.Queue()
+            tx_queue = Queue()
             failover_time = Value('i', 0)
 
             Bot = SoDogeTip()

@@ -56,9 +56,8 @@ def get_coin_value(balance, format=2):
 
 
 def check_amount_valid(amount):
-    print(str(amount))
     try:
-        if (float(amount)) >= 0.00001:
+        if (float(amount)) >= 1:
             # print('such amount : '+str(amount))
             return True
         else:

@@ -96,10 +96,9 @@ def get_user_spendable_balance(user, rpc=None):
 def get_user_confirmed_balance(address):
     rpc = get_rpc()
 
-    bot_logger.logger.debug("Address: %s" % (str(address)))
     unspent_amounts = []
 
-    list_unspent = rpc.listunspent(1, 999999, [address])
+    list_unspent = rpc.listunspent(1, 99999999999, [address])
 
     # in case of no un-spent transaction
     if len(list_unspent) == 0:
