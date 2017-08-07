@@ -112,7 +112,7 @@ def withdraw_user(msg, failover_time):
 
         if utils.check_amount_valid(split_message[1]) and split_message[4] != user.address:
             amount = float(split_message[1])
-            amount = round(amount - 0.5)
+            #amount = round(amount - 0.5)
 
             user_balance = user.get_balance_confirmed()
             user_spendable_balance = crypto.get_user_spendable_balance(user.username)
@@ -124,7 +124,7 @@ def withdraw_user(msg, failover_time):
                     username=user.username, user_balance=str(user_balance), amount=str(amount)) + lang_ltc.message_footer)
             else:
                 receiver_address = split_message[4]
-                tip_id = random.randint(0, 99999999)
+                tip_id = random.randint(0, 999999)
 
                 history.add_to_history(user.username, user.username, receiver_address, amount, "withdraw", "", tip_id)
 
@@ -148,7 +148,7 @@ def withdraw_user(msg, failover_time):
 
 
 def tip_user(reddit, msg, tx_queue, failover_time):
-    bot_logger.logger.info('An user mention detected ')
+    bot_logger.logger.info('A user mention was detected ')
     bot_logger.logger.debug("failover_time : %s " % (str(failover_time.value)))
 
     # create an Tip
@@ -196,10 +196,10 @@ def tip_user(reddit, msg, tx_queue, failover_time):
     bot_logger.logger.debug('user_spendable_balance = %s' % user_spendable_balance)
 
     # in failover we need to use only user_balance
-    if tip.amount >= float(user_spendable_balance):
+    if float(tip.amount) >= float(user_spendable_balance):
         user_pending_balance = tip.sender.get_balance_unconfirmed()
         # not enough for tip
-        if tip.amount < float(user_pending_balance):
+        if float(tip.amount) < float(user_pending_balance):
             reddit.redditor(tip.sender.username).message('pending tip',
                                                          Template(lang_ltc.message_balance_pending_tip).render(
                                                              username=tip.sender.username))
@@ -230,7 +230,7 @@ def tip_user(reddit, msg, tx_queue, failover_time):
                 if tip.verify:
                     msg.reply(Template(lang_ltc.message_tip).render(
                         sender=msg.author.name, receiver=tip.receiver.username,
-                        amount=str(int(tip.amount)),
+                        amount=str(tip.amount),
                         value_usd=str(tip.get_value_usd()), txid=tip.tx_id
                     ))
         else:
@@ -333,7 +333,7 @@ def donate(reddit, msg, tx_queue, failover_time):
 
         donate_index = split_message.index('+donate')
         amount = split_message[donate_index + 1]
-        if utils.check_amount_valid(amount) and split_message[donate_index + 2] == 'doge':
+        if utils.check_amount_valid(amount) and split_message[donate_index + 2] == 'LTC':
 
             crypto.tip_user(user.username.address, models.User(config.bot_name).address, amount, tx_queue,
                             failover_time)

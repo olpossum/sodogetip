@@ -17,9 +17,10 @@ link_balance = "https://www.reddit.com/message/compose?to=" + config.bot_name + 
 link_gold = "https://www.reddit.com/gold/about"
 link_gold_buy = "https://www.reddit.com/message/compose?to=" + config.bot_name + "&subject=%2Bgold&message=buy"
 
-message_register_success = ("Hello /u/{{ username }}! Your account is now registered and ready to tip litecoins :)" \
-                           "\n\nYour wallet address is: {{ address }}" \
-                           "\n\nThis bot is \"on chain\" so when you tip some __mining fee are added__ ! " \
+message_register_success = ("Hello /u/{{ username }}! Your account is now registered and ready to tip litecoins[TESTNET] :)" \
+                           "\n\nYour wallet [TESTNET] address is: {{ address }}" \
+                           "\n\nThis bot is \"on [TESTNET] chain\" so when you tip some __mining fee are added__ ! " \
+                           "\n\nDO NOT SEND REAL LITECOINS TO THIS ADDRESS OR THEY WILL BE LOST!!!"
                            "\n\nWondering how to get tipped litecoins? Participate in /r/litecoin!" \
                            "\n\nIf you need help using me (such as tipping people), you can send me a +help message [here](" + link_help + ") to receive a getting started guide." \
                            "\n\n__DID YOU KNOW?:__ Unlike other tip bots, this one is non-profit and maintained by the community. Checkmate!")
@@ -31,7 +32,7 @@ message_need_register = ("Hello /u/{{ username }}! You need to register an accou
                         "\n\n3. Receive the successful register message" \
                         "\n\nThe successful register message will contain your litecoin address to your tipping account.")
 
-message_invalid_amount = "__^[such ^error]__: ^The ^tip ^amount ^must ^be ^at ^least ^1 ^ltc. ^[[help]](" + link_help + ")"
+message_invalid_amount = "__^[such ^error]__: ^The ^tip ^amount ^must ^be ^at ^least ^0.00001 ^ltc. ^[[help]](" + link_help + ")"
 message_invalid_currency = "__^[such ^error]__: ^The ^tip ^currency ^must ^be ^ltc. ^[[help]](" + link_help + ")"
 message_balance_low_tip = ("__^[such ^error]__: ^/u/{{ username }}\'s ^balance ^is ^too ^low ^for ^this ^tip ^[[help]](" + link_help + ")")
 message_balance_pending_tip = ("__^[such ^error]__: ^/u/{{ username }}\'s ^balance ^must ^wait ^for ^pending ^tips ^to ^be ^confirmed ^before ^sending ^this ^tip ^amount ^[[help]](" + link_help + ")")
