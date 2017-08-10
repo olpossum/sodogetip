@@ -1,7 +1,7 @@
 import os
 import time
 import traceback
-from Queue import Queue
+from queue import Queue
 from multiprocessing import Value
 from threading import Thread
 

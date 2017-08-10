@@ -43,6 +43,7 @@ class Tip(object):
         self.amount = m.group(3).replace(',', '.')
         # Group 4 is doge
         self.currency = m.group(4)
+        print(self.currency)
         # Group 5 is either blank(no verify message) or verify(verify message)
         self.verify = True if (m.group(5) == "verify") else False
 
